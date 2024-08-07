@@ -4,27 +4,30 @@ on:
     branches:
       - staging
 jobs:
-  web-deploy:
-    name: Deploy
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
-      - name: 🔃 Get the latest code
-        uses: actions/checkout@v2.3.2
-      - uses: actions/setup-node@master
-      - name: 📦 Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-      - name: 📥 Install Dependencies
-        run: composer update --ignore-platform-reqs
-      - name: 🔑 Generate key
-        run: php artisan key:generate
-      # - name: Generate storage link
-      #   run: php artisan storage:link
-      - name: 📁 Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          server-dir: /
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2 
+
+    - name: Install PHP and Composer
+      uses: shivammathur/setup-php@v2
+      with:
+          php-version: '8.3'
+          tools: 'composer'
+
+    - name: Install PHP dependencies
+      run: composer install --no-dev --optimize-autoloader
+        
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.SERVER }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASS }}
+        exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
