@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterKeluargaRequest;
 use App\Models\Keluarga;
 use Illuminate\Http\Request;
 
 class KeluargaController extends Controller
 {
-    public function findNik(Request $request){
+    public function findNIK(Request $request){
         $request->validate([
             'nik' => 'required|max:16|min:16',
         ], [
@@ -25,5 +26,21 @@ class KeluargaController extends Controller
             "data" => $keluarga,
         ];
         return response()->json($data, 200);
+    }
+
+    public function register(RegisterKeluargaRequest $request){
+        $nik = $request->nik;
+        if(Keluarga::where('nik', $nik)->exists()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Registrasi data keluarga gagal, NIK sudah terdaftar',
+            ], 409);
+        }
+
+        Keluarga::create($request->validated());
+        return response()->json([
+            'status' => true,
+            'message' => 'Registrasi data keluarga sukses, harap menunggu verifikasi oleh petugas',
+        ], 201);
     }
 }
