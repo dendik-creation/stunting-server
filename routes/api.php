@@ -25,4 +25,5 @@ Route::prefix('auth')->group(function () {
 // Keluarga
 Route::prefix('keluarga')->group(function () {
     Route::get('/find', [KeluargaController::class, 'findNIK']);
+    Route::post('/register', [KeluargaController::class, 'register']);
 });
