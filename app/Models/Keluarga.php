@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Keluarga extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
+    protected $hidden = ['created_at', 'updated_at'];
+
+    public function puskesmas(){
+        return $this->belongsTo(Puskesmas::class, 'puskesmas_id');
+    }
+
+    public function tingkat_kemandirian(){
+        return $this->hasMany(TingkatKemandirian::class, 'keluarga_id', 'id');
+    }
 }

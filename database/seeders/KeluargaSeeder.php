@@ -15,7 +15,7 @@ class KeluargaSeeder extends Seeder
     {
         Keluarga::create([
             'nik' => '1234567890123456',
-            'nama' => 'Wahyu Blyad',
+            'nama_lengkap' => 'Wahyu Blyad',
             'alamat' => 'Jl. Cempaka Timur 12',
             'desa' => 'Cempaka Timur',
             'rt' => '8',
@@ -26,7 +26,7 @@ class KeluargaSeeder extends Seeder
 
         Keluarga::create([
             'nik' => '0987654321098765',
-            'nama' => 'Farhan Kebab',
+            'nama_lengkap' => 'Farhan Kebab',
             'alamat' => 'Jl. Cempaka Barat 12',
             'desa' => 'Cempaka Barat',
             'rt' => '3',
