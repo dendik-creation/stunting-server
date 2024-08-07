@@ -8,26 +8,17 @@ jobs:
     name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.1.0
-      with:
-        fetch-depth: 2 
-
-    - name: Install PHP and Composer
-      uses: shivammathur/setup-php@v2
-      with:
-          php-version: '8.3'
-          tools: 'composer'
-
-    - name: Install PHP dependencies
-      run: composer install --no-dev --optimize-autoloader
-        
-    - name: FTP-Deploy-Action
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      with:
-        server: ${{ secrets.SERVER }}
-        username: ${{ secrets.USER }}
-        password: ${{ secrets.PASS }}
-        exclude: |
+      - uses: actions/checkout@v2.1.0
+        with:
+          fetch-depth: 2
+      # Deploy to cPanel
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
