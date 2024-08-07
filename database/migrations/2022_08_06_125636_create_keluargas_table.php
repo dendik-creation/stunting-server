@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('rt');
             $table->string('rw');
             $table->string('no_telp');
+            $table->boolean('is_apporoved')->default(false);
+            $table->boolean('is_free_stunting')->default(false);
             $table->foreignId('puskesmas_id')->constrained();
             $table->timestamps();
         });

@@ -1,0 +1,47 @@
+name: Deploy to Staging Server
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+    - name: Install rsync
+      run: sudo apt-get update && sudo apt-get install -y rsync
+
+    - name: Sync files to server
+      run: |
+        rsync -avz --exclude 'vendor' --exclude '.git' --exclude 'node_modules' ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_STAGING_PATH }}/
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.composer/cache
+          vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: 🎯 Install Dependencies (Composer)
+      run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && composer install --no-interaction --prefer-dist --optimize-autoloader"
+
+    - name: 📂 Copy .env file if not exists
+      run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && if [ ! -f .env ]; then cp .env.example .env; fi"
+    
+    - name: 🔑 Generate Key
+      run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && php artisan key:generate"
+    
+    - name: 📑 Clear Cache
+      run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && php artisan config:cache && php artisan route:cache && php artisan view:cache"
