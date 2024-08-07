@@ -21,6 +21,9 @@ jobs:
     - name: Install rsync
       run: sudo apt-get update && sudo apt-get install -y rsync
 
+    - name: Add server to known_hosts
+      run: ssh-keyscan -p ${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
     - name: Sync files to server
       run: |
         rsync -avz -e 'ssh -p${{ secrets.DEPLOY_SSH_PORT }}' --exclude 'vendor' --exclude '.git' --exclude 'node_modules' ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_STAGING_PATH }}/
