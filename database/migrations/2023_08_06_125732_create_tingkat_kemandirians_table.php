@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('tingkatan', 2);
             $table->date('tanggal');
+            $table->foreignId('keluarga_id')->constrained();
             $table->timestamps();
         });
     }
