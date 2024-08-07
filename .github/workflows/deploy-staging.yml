@@ -1,53 +1,30 @@
 name: Deploy to Staging Server
-
 on:
   push:
     branches:
       - staging
-
 jobs:
-  deploy:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
-
-    - name: Install rsync
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y rsync
-        rsync --version
-
-    - name: Add server to known_hosts
-      run: ssh-keyscan -p ${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-    - name: Sync files to server
-      run: |
-        /usr/bin/rsync -avz -e 'ssh -p${{ secrets.DEPLOY_SSH_PORT }}' --exclude 'vendor' --exclude '.git' --exclude 'node_modules' ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_STAGING_PATH }}/
-
-    - name: Cache Composer dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.composer/cache
-          vendor
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: ${{ runner.os }}-composer-
-
-    - name: 🎯 Install Dependencies (Composer)
-      run: ssh -p${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && composer install --no-interaction --prefer-dist --optimize-autoloader"
-
-    - name: 📂 Copy .env file if not exists
-      run: ssh -p${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && if [ ! -f .env ]; then cp .env.example .env; fi"
-    
-    - name: 🔑 Generate Key
-      run: ssh -p${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && php artisan key:generate"
-    
-    - name: 📑 Clear Cache
-      run: ssh -p${{ secrets.DEPLOY_SSH_PORT }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_STAGING_PATH }} && php artisan config:cache && php artisan route:cache && php artisan view:cache"
+      - name: 🔃 Get the latest code
+        uses: actions/checkout@v2.3.2
+      - uses: actions/setup-node@master
+      - name: 📦 Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: 📥 Install Dependencies
+        run: composer update --ignore-platform-reqs
+      - name: 🔑 Generate key
+        run: php artisan key:generate
+      # - name: Generate storage link
+      #   run: php artisan storage:link
+      - name: 📁 Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          server-dir: /
