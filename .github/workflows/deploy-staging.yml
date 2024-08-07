@@ -29,7 +29,7 @@ jobs:
 
     - name: Sync files to server
       run: |
-        rsync -avz -e 'ssh -p${{ secrets.DEPLOY_SSH_PORT }}' --exclude 'vendor' --exclude '.git' --exclude 'node_modules' ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_STAGING_PATH }}/
+        /usr/bin/rsync -avz -e 'ssh -p${{ secrets.DEPLOY_SSH_PORT }}' --exclude 'vendor' --exclude '.git' --exclude 'node_modules' ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_STAGING_PATH }}/
 
     - name: Cache Composer dependencies
       uses: actions/cache@v3
