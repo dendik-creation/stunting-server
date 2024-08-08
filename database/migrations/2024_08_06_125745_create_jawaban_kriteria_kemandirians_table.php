@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kriteria_kemandirian_id')->constrained();
             $table->foreignId('keluarga_id')->constrained();
-            $table->boolean('jawaban');
             $table->timestamps();
         });
     }

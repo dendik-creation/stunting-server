@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeluargaController;
+use App\Http\Controllers\KemandirianController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,11 @@ Route::prefix('auth')->group(function () {
 Route::prefix('keluarga')->group(function () {
     Route::get('/find', [KeluargaController::class, 'findNIK']);
     Route::post('/register', [KeluargaController::class, 'register']);
+});
+
+// Kemandirian
+Route::prefix('kemandirian')->group(function(){
+    Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToAnswerQuestion']);
+    Route::get('/questions', [KemandirianController::class, 'getQuestions']);
+    Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
 });
