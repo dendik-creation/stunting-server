@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PuskesmasSeeder::class,
             UserSeeder::class,
             KeluargaSeeder::class,
+            KriteriaKemandirianSeeder::class,
         ]);
     }
 }
