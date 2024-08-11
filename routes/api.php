@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\KemandirianController;
+use App\Http\Controllers\PuskesmasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
+
+// Puskesmas
+Route::prefix('puskesmas')->group(function () {
+    Route::get('/list', [PuskesmasController::class, 'getList']);
 });
 
 // Keluarga
