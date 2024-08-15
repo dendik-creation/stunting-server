@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 class KeluargaController extends Controller
 {
     public function findNIK(Request $request){
-        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian')->where('nik', $request->nik)->first();
+        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian', 'kesehatan_lingkungan')->where('nik', $request->nik)->first();
         if(empty($keluarga)){
            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
         $data = [
             "status" => true,
             "message" => 'Data berhasil ditemukan',
-            "data" => $keluarga,
+            "data" => new HomeResource($keluarga),
         ];
         return response()->json($data, 200);
     }
@@ -31,10 +31,11 @@ class KeluargaController extends Controller
             ], 409);
         }
 
-        Keluarga::create($request->validated());
+        $keluarga_created = Keluarga::create($request->validated());
         return response()->json([
             'status' => true,
             'message' => 'Registrasi data keluarga sukses, harap menunggu verifikasi oleh petugas',
+            'data' => $keluarga_created,
         ], 201);
     }
 
