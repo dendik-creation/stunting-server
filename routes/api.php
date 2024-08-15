@@ -33,6 +33,9 @@ Route::prefix('puskesmas')->group(function () {
 Route::prefix('keluarga')->group(function () {
     Route::get('/find', [KeluargaController::class, 'findNIK']);
     Route::post('/register', [KeluargaController::class, 'register']);
+
+    // Home
+    Route::get('/home/{keluarga_id}', [KeluargaController::class, 'homeData']);
 });
 
 // Kemandirian
