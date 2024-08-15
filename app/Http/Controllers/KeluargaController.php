@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterKeluargaRequest;
+use App\Http\Resources\Keluarga\HomeResource;
 use App\Models\Keluarga;
 use Illuminate\Http\Request;
 
@@ -35,5 +36,15 @@ class KeluargaController extends Controller
             'status' => true,
             'message' => 'Registrasi data keluarga sukses, harap menunggu verifikasi oleh petugas',
         ], 201);
+    }
+
+    public function homeData($keluarga_id){
+        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian', 'kesehatan_lingkungan')->findOrFail($keluarga_id);
+        $data = [
+            'status' => true,
+            'message' => 'Data keluarga ditemukan',
+            'data' => new HomeResource($keluarga),
+        ];
+        return response()->json($data, 200);
     }
 }
