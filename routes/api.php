@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\KemandirianController;
+use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\PuskesmasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,14 @@ Route::prefix('auth')->group(function () {
 // Puskesmas
 Route::prefix('puskesmas')->group(function () {
     Route::get('/list', [PuskesmasController::class, 'getList']);
+});
+
+Route::middleware('auth:sanctum')->prefix('operator')->group(function(){
+    // Home
+    Route::get('/home', [OperatorController::class, 'home']);
+    // Approval
+    Route::get('/approval/detail/{keluarga_id}', [OperatorController::class, 'detailRequest']);
+    Route::put('/approve/{keluarga_id}', [OperatorController::class, 'approveKeluarga']);
 });
 
 // Keluarga
