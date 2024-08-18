@@ -34,5 +34,27 @@ class KeluargaSeeder extends Seeder
             'no_telp' => '081234567890',
             'puskesmas_id' => 3,
         ]);
+
+        Keluarga::create([
+            'nik' => '1213141516171819',
+            'nama_lengkap' => 'Abdul Dudul',
+            'alamat' => 'Jl. Cempaka Barat 12',
+            'desa' => 'Cempaka Barat',
+            'rt' => '1',
+            'rw' => '2',
+            'no_telp' => '081234567890',
+            'puskesmas_id' => 3,
+        ]);
+
+        Keluarga::create([
+            'nik' => '9999999999999999',
+            'nama_lengkap' => 'Adit Kompressor',
+            'alamat' => 'Jl. Cempaka Barat 12',
+            'desa' => 'Cempaka Barat',
+            'rt' => '3',
+            'rw' => '2',
+            'no_telp' => '081234567890',
+            'puskesmas_id' => 3,
+        ]);
     }
 }
