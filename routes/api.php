@@ -49,7 +49,7 @@ Route::prefix('keluarga')->group(function () {
 
 // Kemandirian
 Route::middleware('isApproved')->prefix('kemandirian')->group(function(){
-    Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToAnswerQuestion']);
+    Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToNextTest']);
     Route::get('/questions/{keluarga_id}', [KemandirianController::class, 'getQuestions']);
     Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
 });

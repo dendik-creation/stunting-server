@@ -62,7 +62,7 @@ class KemandirianController extends Controller
         }
     }
 
-    public function availableToAnswerQuestion($keluarga_id)
+    public function availableToNextTest($keluarga_id)
     {
         $is_available = KemandirianHelper::availableToAnswer($keluarga_id);
         if ($is_available['status']) {
