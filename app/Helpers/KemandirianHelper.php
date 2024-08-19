@@ -10,22 +10,14 @@ class KemandirianHelper
     public static function calculateAnswertoTingkatan(int $answer_count, string|int $keluarga_id)
     {
         $tingkatan = 0;
-        switch ($answer_count) {
-            case 2:
-                $tingkatan = 1;
-                break;
-            case 5:
-                $tingkatan = 2;
-                break;
-            case 6:
-                $tingkatan = 3;
-                break;
-            case 7:
-                $tingkatan = 4;
-                break;
-            default:
-                $tingkatan = 0;
-                break;
+        if ($answer_count <= 2) {
+            $tingkatan = 1;
+        } elseif ($answer_count <= 5) {
+            $tingkatan = 2;
+        } elseif ($answer_count <= 6) {
+            $tingkatan = 3;
+        } elseif ($answer_count <= 7) {
+            $tingkatan = 4;
         }
         if($tingkatan != 0){
             TingkatKemandirian::create([
