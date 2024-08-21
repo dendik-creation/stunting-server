@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('ibu_bekerja');
             $table->string('pendidikan_ibu');
             $table->boolean('orang_tua_merokok');
+            $table->integer('step');
             $table->foreignId('keluarga_id')->constrained();
             $table->timestamps();
         });

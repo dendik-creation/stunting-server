@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Keluarga;
 
+use App\Helpers\ScreeningTestHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,8 +27,12 @@ class HomeResource extends JsonResource
             'is_approved' => $this->is_approved,
             'is_free_stunting' => $this->is_free_stunting,
             'puskesmas' => $this->puskesmas,
-            'latest_tingkat_kemandirian' => $this->tingkat_kemandirian->last(),
-            'latest_kesehatan_lingkungan' => $this->kesehatan_lingkungan->last(),
+            'screening_test' => [
+                'current_step' => ScreeningTestHelper::getCurrentScreening($this->resource),
+                'current_test_status' => ScreeningTestHelper::currentTestStatus($this->resource),
+                'test_result' => ScreeningTestHelper::getTestResult($this->resource),
+                'is_complete' => ScreeningTestHelper::completeCheck($this->resource),
+            ]
         ];
     }
 }
