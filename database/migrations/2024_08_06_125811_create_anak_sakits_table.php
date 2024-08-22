@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('nama_anak');
             $table->string('usia');
+            $table->enum('jenis_kelamin', ['L', 'P']);
             $table->double('berat_badan', 8, 2);
             $table->double('tinggi_badan', 8, 2);
             $table->enum('berat_lahir', ['normal', 'rendah']);
             $table->boolean('ibu_bekerja');
             $table->string('pendidikan_ibu');
             $table->boolean('orang_tua_merokok');
-            $table->integer('step');
             $table->foreignId('keluarga_id')->constrained();
             $table->timestamps();
         });

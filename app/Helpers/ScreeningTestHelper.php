@@ -37,7 +37,6 @@ class ScreeningTestHelper
     public static function getCurrentScreening($data){
         return max(
             optional($data->tingkat_kemandirian->last())->step,
-            optional($data->anak_sakit->last())->step,
             optional($data->kesehatan_lingkungan->last())->step
         ) ?? null;
     }
@@ -46,7 +45,6 @@ class ScreeningTestHelper
         $current_screening = self::getCurrentScreening($data);
         $response = [
             'tingkat_kemandirian' => false,
-            'anak_sakit' => false,
             'kesehatan_lingkugan' => false,
         ];
         foreach ($response as $key => $value) {
@@ -62,7 +60,6 @@ class ScreeningTestHelper
         $current_screening = self::getCurrentScreening($data);
         $result = [
             'tingkat_kemandirian' => null,
-            'anak_sakit' => null,
             'kesehatan_lingkungan' => null,
         ];
 

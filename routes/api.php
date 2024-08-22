@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnakSakitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\KemandirianController;
@@ -47,9 +48,20 @@ Route::prefix('keluarga')->group(function () {
     Route::get('/home/{keluarga_id}', [KeluargaController::class, 'homeData']);
 });
 
-// Kemandirian
-Route::middleware('isApproved')->prefix('kemandirian')->group(function(){
-    Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToNextTest']);
-    Route::get('/questions/{keluarga_id}', [KemandirianController::class, 'getQuestions']);
-    Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
+// Active isApproved Profile
+Route::middleware('isApproved')->group(function(){
+    // Kemandirian
+    Route::prefix('kemandirian')->group(function(){
+        Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToNextTest']);
+        Route::get('/questions/{keluarga_id}', [KemandirianController::class, 'getQuestions']);
+        Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
+    });
+
+    // Anak Sakit
+    Route::prefix('anak-sakit')->group(function(){
+        Route::get('list/{keluarga_id}', [AnakSakitController::class, 'getAnakSakitList']);
+        Route::get('detail/{keluarga_id}/{anak_sakit_id}', [AnakSakitController::class, 'getAnakSakitDetail']);
+        Route::get('/penyakit-list/{keluarga_id}', [AnakSakitController::class, 'getPenyakitList']);
+        Route::post('store-anak-sakit/{keluarga_id}', [AnakSakitController::class, 'storeAnakSakit']);
+    });
 });
