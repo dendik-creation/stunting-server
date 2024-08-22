@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('keluarga_id')->constrained();
             $table->integer('nilai_total');
             $table->date('tangggal');
+            $table->integer('step');
             $table->timestamps();
         });
     }

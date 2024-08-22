@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\KemandirianHelper;
+use App\Helpers\ScreeningTestHelper;
 use App\Models\JawabanKriteriaKemandirian;
 use App\Models\KriteriaKemandirian;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class KemandirianController extends Controller
             'data.*kriteria_kemandirian_id' => 'required',
         ]);
         $step = 0;
-        $available_answer = KemandirianHelper::availableToAnswer($keluarga_id);
+        $available_answer = ScreeningTestHelper::availableToAnswer($keluarga_id);
         // Is Available to Answer
         if ($available_answer['status']) {
             if (!empty($request->data) && count($request->data) > 0) {
@@ -42,7 +42,7 @@ class KemandirianController extends Controller
                 }
             }
             // Calculate Tingkat Kemandiian
-            if (KemandirianHelper::calculateAnswertoTingkatan($step, $keluarga_id)) {
+            if (ScreeningTestHelper::calculateAnswertoTingkatan($step, $keluarga_id)) {
                 return response()->json(
                     [
                         'status' => true,
@@ -64,7 +64,7 @@ class KemandirianController extends Controller
 
     public function availableToNextTest($keluarga_id)
     {
-        $is_available = KemandirianHelper::availableToAnswer($keluarga_id);
+        $is_available = ScreeningTestHelper::availableToAnswer($keluarga_id);
         if ($is_available['status']) {
             return response()->json(
                 [
