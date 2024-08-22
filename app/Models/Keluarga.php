@@ -20,7 +20,7 @@ class Keluarga extends Model
     }
 
     public function anak_sakit(){
-        return $this->hasMany(AnakSakit::class, 'keluarga_id', 'id');
+        return $this->belongsTo(AnakSakit::class, 'keluarga_id', 'id');
     }
 
     public function kesehatan_lingkungan(){
