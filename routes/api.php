@@ -59,8 +59,7 @@ Route::middleware('isApproved')->group(function(){
 
     // Anak Sakit
     Route::prefix('anak-sakit')->group(function(){
-        Route::get('list/{keluarga_id}', [AnakSakitController::class, 'getAnakSakitList']);
-        Route::get('detail/{keluarga_id}/{anak_sakit_id}', [AnakSakitController::class, 'getAnakSakitDetail']);
+        Route::get('get/{keluarga_id}', [AnakSakitController::class, 'getAnakSakit']);
         Route::get('/penyakit-list/{keluarga_id}', [AnakSakitController::class, 'getPenyakitList']);
         Route::post('store-anak-sakit/{keluarga_id}', [AnakSakitController::class, 'storeAnakSakit']);
     });
