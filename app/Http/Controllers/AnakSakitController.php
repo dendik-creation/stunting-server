@@ -17,13 +17,13 @@ class AnakSakitController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Data anak sakit tidak ditemukan',
-            ]);
+            ], 404);
         }
         return response()->json([
             'status' => true,
             'message' => 'Data anak sakit ditemukan',
             'data' => $anak_sakit,
-        ]);
+        ], 200);
     }
 
     public function getPenyakitList()

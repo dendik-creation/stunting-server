@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('komponen_kesehatans', function (Blueprint $table) {
             $table->id();
             $table->string('nama_komponen');
-            $table->integer('bobot');
             $table->timestamps();
         });
     }
