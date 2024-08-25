@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('jawaban_kriteria_kesehatans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kesehatan_lingkungan_id')->constrained();
+            $table->foreignId('keluarga_id')->constrained();
             $table->foreignId('komponen_kesehatan_id')->constrained();
             $table->foreignId('kriteria_kesehatan_id')->constrained();
+            $table->foreignId('kesehatan_lingkungan_id')->constrained();
             $table->timestamps();
         });
     }

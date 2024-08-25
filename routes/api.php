@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AnakSakitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\KemandirianController;
+use App\Http\Controllers\KesehatanLingkunganController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\PuskesmasController;
 use Illuminate\Http\Request;
@@ -47,9 +49,28 @@ Route::prefix('keluarga')->group(function () {
     Route::get('/home/{keluarga_id}', [KeluargaController::class, 'homeData']);
 });
 
-// Kemandirian
-Route::middleware('isApproved')->prefix('kemandirian')->group(function(){
-    Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToNextTest']);
-    Route::get('/questions/{keluarga_id}', [KemandirianController::class, 'getQuestions']);
-    Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
+// Active isApproved Profile
+Route::middleware('isApproved')->group(function(){
+    // Kemandirian
+    Route::prefix('kemandirian')->group(function(){
+        // Get Data Bleum
+        Route::get('/available/{keluarga_id}', [KemandirianController::class, 'availableToNextTest']);
+        Route::get('/questions/{keluarga_id}', [KemandirianController::class, 'getQuestions']);
+        Route::post('answer-question/{keluarga_id}', [KemandirianController::class, 'answerQuestion']);
+    });
+
+    // Anak Sakit
+    Route::prefix('anak-sakit')->group(function(){
+        Route::get('get/{keluarga_id}', [AnakSakitController::class, 'getAnakSakit']);
+        Route::get('/penyakit-list/{keluarga_id}', [AnakSakitController::class, 'getPenyakitList']);
+        Route::post('store-anak-sakit/{keluarga_id}', [AnakSakitController::class, 'storeAnakSakit']);
+    });
+
+    // Kesehatan Lingkungan (Observasi Sanitasi)
+    Route::prefix('kesehatan-lingkungan')->group(function(){
+        Route::get('get/{keluarga_id}', [KesehatanLingkunganController::class, 'getByKeluarga']);
+        Route::get('detail/{keluarga_id}/{id}', [KesehatanLingkunganController::class, 'getById']);
+        Route::get('/questions/{keluarga_id}', [KesehatanLingkunganController::class, 'getQuestions']);
+        Route::post('store/{keluarga_id}', [KesehatanLingkunganController::class, 'storeKesehatanLingkungan']);
+    });
 });

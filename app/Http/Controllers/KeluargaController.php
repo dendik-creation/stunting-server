@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class KeluargaController extends Controller
 {
     public function findNIK(Request $request){
-        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian', 'kesehatan_lingkungan')->where('nik', $request->nik)->first();
+        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian','anak_sakit', 'kesehatan_lingkungan')->where('nik', $request->nik)->first();
         if(empty($keluarga)){
            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
@@ -40,7 +40,7 @@ class KeluargaController extends Controller
     }
 
     public function homeData($keluarga_id){
-        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian', 'kesehatan_lingkungan')->findOrFail($keluarga_id);
+        $keluarga = Keluarga::with('puskesmas', 'tingkat_kemandirian','anak_sakit', 'kesehatan_lingkungan')->findOrFail($keluarga_id);
         $data = [
             'status' => true,
             'message' => 'Data keluarga ditemukan',

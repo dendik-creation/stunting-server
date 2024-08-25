@@ -19,6 +19,10 @@ class Keluarga extends Model
         return $this->hasMany(TingkatKemandirian::class, 'keluarga_id', 'id');
     }
 
+    public function anak_sakit(){
+        return $this->belongsTo(AnakSakit::class, 'keluarga_id', 'id');
+    }
+
     public function kesehatan_lingkungan(){
         return $this->hasMany(KesehatanLingkungan::class, 'keluarga_id', 'id');
     }

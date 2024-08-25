@@ -13,24 +13,33 @@ class PuskesmasSeeder extends Seeder
      */
     public function run(): void
     {
-        Puskesmas::create([
-            'nama_puskesmas' => 'Puskesmas Cempaka',
-            'alamat' => 'Jl. Cempaka 12',
-        ]);
+        $puskesmas = [
+            "Kaliwungu",
+            "Sidorekso",
+            "Wergu Wetan",
+            "Purwosari",
+            "Rendeng",
+            "Jati",
+            "Ngembal Kulon",
+            "Undaan",
+            "Ngemplak",
+            "Mejobo",
+            "Jepang",
+            "Jekulo",
+            "Tanjungrejo",
+            "Bae",
+            "Dersalam",
+            "Gribig",
+            "Gondosari",
+            "Dawe",
+            "Rejosari"
+        ];
 
-        Puskesmas::create([
-            'nama_puskesmas' => 'Puskesmas Cempaka Timur',
-            'alamat' => 'Jl. Cempaka Timur 12',
-        ]);
-
-        Puskesmas::create([
-            'nama_puskesmas' => 'Puskesmas Cempaka Barat',
-            'alamat' => 'Jl. Cempaka Barat 12',
-        ]);
-
-        Puskesmas::create([
-            'nama_puskesmas' => 'Puskesmas Cempaka Selatan',
-            'alamat' => 'Jl. Cempaka Selatan 12',
-        ]);
+        foreach ($puskesmas as $key => $value) {
+            Puskesmas::create([
+                'nama_puskesmas' => $value,
+                'alamat' => 'Jl. ' . $value . ' No '. rand(10, 99),
+            ]);
+        }
     }
 }
