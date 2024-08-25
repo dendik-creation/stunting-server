@@ -23,7 +23,7 @@ class AnakSakitController extends Controller
             'status' => true,
             'message' => 'Data anak sakit ditemukan',
             'data' => $anak_sakit,
-        ], 200, [], JSON_NUMERIC_CHECK);
+        ], 200);
     }
 
     public function getPenyakitList()
@@ -41,7 +41,7 @@ class AnakSakitController extends Controller
             'status' => true,
             'message' => 'Data penyakit ditemukan',
             'data' => $data,
-        ], 200, [], JSON_NUMERIC_CHECK);
+        ], 200);
     }
 
     private function storePenyakitAnak(array $penyerta, array $komplikasi, int $anak_sakit_id)
@@ -86,6 +86,6 @@ class AnakSakitController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Data anak sakit berhasil ditambahkan',
-        ], 200, [], JSON_NUMERIC_CHECK);
+        ], 200);
     }
 }

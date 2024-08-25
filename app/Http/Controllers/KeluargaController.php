@@ -19,7 +19,7 @@ class KeluargaController extends Controller
             "message" => 'Data berhasil ditemukan',
             "data" => new HomeResource($keluarga),
         ];
-        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json($data, 200);
     }
 
     public function register(RegisterKeluargaRequest $request){
@@ -46,6 +46,6 @@ class KeluargaController extends Controller
             'message' => 'Data keluarga ditemukan',
             'data' => new HomeResource($keluarga),
         ];
-        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json($data, 200);
     }
 }
