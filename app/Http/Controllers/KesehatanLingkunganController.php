@@ -20,7 +20,7 @@ class KesehatanLingkunganController extends Controller
                     'status' => false,
                     'message' => 'Data kesehatan lingkungan tidak ditemukan',
                 ],
-                404,
+                404, [], JSON_NUMERIC_CHECK
             );
         }
         return response()->json(
@@ -29,7 +29,7 @@ class KesehatanLingkunganController extends Controller
                 'message' => 'Data kesehatan lingkungan ditemukan',
                 'data' => $kesehatan_lingkungan,
             ],
-            200,
+            200, [], JSON_NUMERIC_CHECK
         );
     }
 
@@ -42,7 +42,7 @@ class KesehatanLingkunganController extends Controller
                 'message' => 'Data kesehatan lingkungan ditemukan',
                 'data' => $kesehatan_lingkungan,
             ],
-            200,
+            200, [], JSON_NUMERIC_CHECK
         );
     }
 
@@ -55,7 +55,7 @@ class KesehatanLingkunganController extends Controller
                 'message' => 'Data komponen kesehatan ditemukan',
                 'data' => $komponen,
             ],
-            200,
+            200, [], JSON_NUMERIC_CHECK
         );
     }
 
@@ -80,7 +80,7 @@ class KesehatanLingkunganController extends Controller
                 'status' => true,
                 'message' => 'Tes kesehatan lingkungan berhasil ditambahkan',
             ],
-            200,
+            200, [], JSON_NUMERIC_CHECK
         );
     }
 

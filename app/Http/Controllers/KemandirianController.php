@@ -18,7 +18,7 @@ class KemandirianController extends Controller
                 'message' => 'Pertanyaan kritetia kemandirian berhasil disiapkan',
                 'data' => $questions,
             ],
-            200,
+            200, [], JSON_NUMERIC_CHECK
         );
     }
 
@@ -48,7 +48,7 @@ class KemandirianController extends Controller
                         'status' => true,
                         'message' => 'Jawaban tingkat kemandirian berhasil dikirim',
                     ],
-                    200,
+                    200, [], JSON_NUMERIC_CHECK
                 );
             }
         } else {
@@ -57,7 +57,7 @@ class KemandirianController extends Controller
                     'status' => $available_answer['status'],
                     'message' => $available_answer['message'],
                 ],
-                401,
+                401, [], JSON_NUMERIC_CHECK
             );
         }
     }
@@ -71,7 +71,7 @@ class KemandirianController extends Controller
                     'status' => true,
                     'message' => 'Anda dapat mengisi kriteria kemandirian kembali',
                 ],
-                200,
+                200, [], JSON_NUMERIC_CHECK
             );
         } else {
             return response()->json(
@@ -79,7 +79,7 @@ class KemandirianController extends Controller
                     'status' => $is_available['status'],
                     'message' => $is_available['message'],
                 ],
-                401,
+                401, [], JSON_NUMERIC_CHECK
             );
         }
     }
