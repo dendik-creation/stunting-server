@@ -9,8 +9,8 @@ class KesehatanLingkungan extends Model
 {
     use HasFactory;
 
-    const int BOBOT = 25;
-    const int HEALTH_METER = 334;
+    const BOBOT = 25;
+    const HEALTH_METER = 334;
 
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
