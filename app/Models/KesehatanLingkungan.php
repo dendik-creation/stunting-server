@@ -15,7 +15,7 @@ class KesehatanLingkungan extends Model
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 
-    protected $cast = [
+    protected $casts = [
         'step' => 'integer',
         'nilai_total' => 'integer',
         'is_healthy' => 'integer',
