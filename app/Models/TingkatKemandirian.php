@@ -10,7 +10,7 @@ class TingkatKemandirian extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
-    protected $cast = [
+    protected $casts = [
         'step' => 'integer',
     ];
 }
