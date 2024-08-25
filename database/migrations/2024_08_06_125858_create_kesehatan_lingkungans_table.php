@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('keluarga_id')->constrained();
             $table->integer('nilai_total');
-            $table->date('tangggal');
+            $table->date('tanggal');
             $table->integer('step');
+            $table->boolean('is_healthy')->default(false);
             $table->timestamps();
         });
     }

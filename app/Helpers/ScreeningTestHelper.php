@@ -34,18 +34,31 @@ class ScreeningTestHelper
         return false;
     }
 
-    public static function getCurrentScreening($data){
-        return max(
-            optional($data->tingkat_kemandirian->last())->step,
-            optional($data->kesehatan_lingkungan->last())->step
-        ) ?? null;
+    public static function getCurrentScreening($data): int
+    {
+    $tingkatKemandirian = optional($data->tingkat_kemandirian->last());
+    $kesehatanLingkungan = optional($data->kesehatan_lingkungan->last());
+
+    $tingkatKemandirianStep = $tingkatKemandirian->step;
+    $tingkatKemandirianTanggal = $tingkatKemandirian->tanggal;
+
+    $kesehatanLingkunganStep = $kesehatanLingkungan->step;
+
+    if ($tingkatKemandirianStep === $kesehatanLingkunganStep) {
+        if (Carbon::parse($tingkatKemandirianTanggal)->addWeeks(4)->isPast()) {
+            return ($tingkatKemandirianStep ?? 0) + 1;
+        }
+        return $tingkatKemandirianStep ?? 0;
+    }
+
+    return max($tingkatKemandirianStep ?? 0, $kesehatanLingkunganStep ?? 0);
     }
 
     public static function currentTestStatus($data){
         $current_screening = self::getCurrentScreening($data);
         $response = [
             'tingkat_kemandirian' => false,
-            'kesehatan_lingkugan' => false,
+            'kesehatan_lingkungan' => false,
         ];
         foreach ($response as $key => $value) {
             if($current_screening != null){
