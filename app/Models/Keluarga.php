@@ -10,6 +10,10 @@ class Keluarga extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = [
+        'is_approved' => 'integer',
+        'is_free_stunting' => 'integer',
+    ];
 
     public function puskesmas(){
         return $this->belongsTo(Puskesmas::class, 'puskesmas_id');

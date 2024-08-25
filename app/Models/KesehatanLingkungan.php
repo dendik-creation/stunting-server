@@ -15,6 +15,13 @@ class KesehatanLingkungan extends Model
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 
+    protected $cast = [
+        'step' => 'integer',
+        'nilai_total' => 'integer',
+        'is_healthy' => 'integer',
+    ];
+
+
     public function jawaban_kriteria_kesehatan(){
         return $this->hasMany(JawabanKriteriaKesehatan::class, 'kesehatan_lingkungan_id', 'id');
     }

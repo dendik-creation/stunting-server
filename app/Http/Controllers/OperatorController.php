@@ -21,7 +21,7 @@ class OperatorController extends Controller
                 'approval_request' => $approval_request,
             ],
         ];
-        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json($data, 200);
     }
 
     public function detailRequest($keluarga_id){
@@ -36,7 +36,7 @@ class OperatorController extends Controller
                 'status' => true,
                 'message' => 'Data keluarga ditemukan',
                 'data' => $keluarga
-            ], 200, [], JSON_NUMERIC_CHECK);
+            ], 200);
         }
     }
 
@@ -47,7 +47,7 @@ class OperatorController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data keluarga disetujui',
-            ], 200, [], JSON_NUMERIC_CHECK);
+            ], 200);
         }else{
             return response()->json([
                 'status' => false,

@@ -22,7 +22,7 @@ class PuskesmasController extends Controller
             'message' => 'Data puskesmas ditemukan',
             'data' => $puskesmas,
         ];
-        return response()->json($data ,200, [], JSON_NUMERIC_CHECK);
+        return response()->json($data ,200);
     }
 
     /**
