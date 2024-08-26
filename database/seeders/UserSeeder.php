@@ -37,5 +37,21 @@ class UserSeeder extends Seeder
             'role' => 'operator',
             'puskesmas_id' => 3,
         ]);
+
+        User::create([
+            'username' => 'dimas',
+            'nama_lengkap' => 'Muhammad Dimas Mewing',
+            'password' => Hash::make('12345'),
+            'role' => 'operator',
+            'puskesmas_id' => 4,
+        ]);
+
+        User::create([
+            'username' => 'prengki',
+            'nama_lengkap' => 'Prengki Mendoan',
+            'password' => Hash::make('12345'),
+            'role' => 'operator',
+            'puskesmas_id' => 5,
+        ]);
     }
 }
