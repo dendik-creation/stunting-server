@@ -15,12 +15,23 @@ class KeluargaSeeder extends Seeder
     {
         Keluarga::create([
             'nik' => '1234567890123456',
-            'nama_lengkap' => 'Wahyu Blyad',
-            'alamat' => 'Jl. Cempaka Timur 12',
-            'desa' => 'Cempaka Timur',
+            'nama_lengkap' => 'Wahyu Wawan',
+            'alamat' => 'Jl. Sidorekso No. 14',
+            'desa' => 'Sidorekso',
             'rt' => '8',
             'rw' => '3',
             'no_telp' => '081234567890',
+            'puskesmas_id' => 2,
+        ]);
+
+        Keluarga::create([
+            'nik' => '0000000000000000',
+            'nama_lengkap' => 'Bachrul Almond',
+            'alamat' => 'Jl. Sidorekso No. 14',
+            'desa' => 'Sidorekso',
+            'rt' => '2',
+            'rw' => '3',
+            'no_telp' => '08111111121',
             'puskesmas_id' => 2,
         ]);
 

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class ScreeningTestHelper
 {
-    public static function calculateAnswertoTingkatan(int $answer_count, string|int $keluarga_id)
+    public static function calculateAnswertoTingkatan(int $answer_count, string|int $tingkat_kemandirian_id)
     {
         $tingkatan = 0;
         if ($answer_count <= 2) {
@@ -22,12 +22,9 @@ class ScreeningTestHelper
             $tingkatan = 4;
         }
         if($tingkatan != 0){
-            $step_tingkatan = TingkatKemandirian::where('keluarga_id', $keluarga_id)->count();
-            TingkatKemandirian::create([
-                'tingkatan' => $tingkatan,
-                'tanggal' => date('Y-m-d'),
-                'keluarga_id' => $keluarga_id,
-                'step' => $step_tingkatan + 1
+            $tingkat_kemandirian = TingkatKemandirian::findOrFail($tingkat_kemandirian_id);
+            $tingkat_kemandirian->update([
+                'tingkatan' => $tingkatan
             ]);
             return true;
         }

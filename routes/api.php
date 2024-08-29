@@ -38,6 +38,16 @@ Route::middleware('auth:sanctum')->prefix('operator')->group(function(){
     // Approval
     Route::get('/approval/detail/{keluarga_id}', [OperatorController::class, 'detailRequest']);
     Route::put('/approve/{keluarga_id}', [OperatorController::class, 'approveKeluarga']);
+
+    // Keluarga Data
+    Route::prefix('keluarga')->group(function(){
+        // List
+        Route::get('/list', [OperatorController::class, 'getKeluargaList']);
+        Route::get('/{keluarga_id}', [OperatorController::class, 'getKeluargaById']);
+        // Keluarga Test Result
+        Route::get('/{keluarga_id}/test', [OperatorController::class, 'getKeluargaTest']);
+        Route::get('/{keluarga_id}/test/{step}', [OperatorController::class, 'getKeluargaTestByStep']);
+    });
 });
 
 // Keluarga
@@ -47,6 +57,12 @@ Route::prefix('keluarga')->group(function () {
 
     // Home
     Route::get('/home/{keluarga_id}', [KeluargaController::class, 'homeData']);
+
+    // Tes Result
+    Route::prefix('test')->middleware('isApproved')->group(function(){
+        Route::get('/list/{keluarga_id}', [KeluargaController::class, 'getKeluargaTest']);
+        Route::get('detail/{keluarga_id}/{step}', [KeluargaController::class, 'getKeluargaTestByStep']);
+    });
 });
 
 // Active isApproved Profile

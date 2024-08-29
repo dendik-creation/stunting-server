@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ScreeningTestHelper;
 use App\Models\JawabanKriteriaKemandirian;
 use App\Models\KriteriaKemandirian;
+use App\Models\TingkatKemandirian;
 use Illuminate\Http\Request;
 
 class KemandirianController extends Controller
@@ -27,22 +28,33 @@ class KemandirianController extends Controller
         $request->validate([
             'data.*kriteria_kemandirian_id' => 'required',
         ]);
-        $step = 0;
+        $answer_count = 0;
         $available_answer = ScreeningTestHelper::availableToAnswer($keluarga_id);
         // Is Available to Answer
         if ($available_answer['status']) {
+            // Initial Null Value Tingkat Kemandirian
+            $step_tingkatan = TingkatKemandirian::where('keluarga_id', $keluarga_id)->count();
+            $tingkat_kemandirian = TingkatKemandirian::create([
+                'tingkatan' => 0,
+                'step' => $step_tingkatan + 1,
+                'tanggal' => date('Y-m-d'),
+                'keluarga_id' => $keluarga_id,
+            ]);
+
+            // Store Answer Question
             if (!empty($request->data) && count($request->data) > 0) {
-                // Store Answer Question
                 foreach ($request->data as $item) {
                     JawabanKriteriaKemandirian::create([
+                        'tingkat_kemandirian_id' => $tingkat_kemandirian['id'],
                         'kriteria_kemandirian_id' => $item['kriteria_kemandirian_id'],
                         'keluarga_id' => $keluarga_id,
                     ]);
-                    $step++;
+                    $answer_count++;
                 }
             }
-            // Calculate Tingkat Kemandiian
-            if (ScreeningTestHelper::calculateAnswertoTingkatan($step, $keluarga_id)) {
+
+            // Calculate Update Tingkat Kemandiian
+            if (ScreeningTestHelper::calculateAnswertoTingkatan($answer_count, $tingkat_kemandirian['id'])) {
                 return response()->json(
                     [
                         'status' => true,
