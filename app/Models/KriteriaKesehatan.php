@@ -14,4 +14,8 @@ class KriteriaKesehatan extends Model
         'komponen_kesehatan_id' => 'integer',
         'nilai' => 'integer',
     ];
+
+    public function komponen_kesehatan(){
+        return $this->belongsTo(KomponenKesehatan::class, 'komponen_kesehatan_id', 'id');
+    }
 }

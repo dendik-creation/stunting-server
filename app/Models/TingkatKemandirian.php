@@ -13,4 +13,8 @@ class TingkatKemandirian extends Model
     protected $casts = [
         'step' => 'integer',
     ];
+
+    public function jawaban_kriteria_kemandirian(){
+        return $this->hasMany(JawabanKriteriaKemandirian::class, 'tingkat_kemandirian_id', 'id');
+    }
 }

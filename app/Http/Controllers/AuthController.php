@@ -15,10 +15,10 @@ class AuthController extends Controller
             ->where('username' , $request->username)
             ->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['status' => 'fail', 'message' => 'Username or password is incorrect'], 401);
+            return response()->json(['status' => false, 'message' => 'Username atau password salah'], 401);
         }
         $data = [
-            'status' => 'success',
+            'status' => true,
             'message' => 'Login success',
             'data' => [
                 'user' => $user,
@@ -31,9 +31,9 @@ class AuthController extends Controller
     public function logout(Request $request){
         if(!empty(auth()->user())){
             $request->user()->currentAccessToken()->delete();
-            return response()->json(['status' => 'success', 'message' => 'Logout success'], 200);
+            return response()->json(['status' => true, 'message' => 'Logout success'], 200);
         }else{
-            return response()->json(['status' => 'fail', 'message' => 'Logout failed'], 401);
+            return response()->json(['status' => false, 'message' => 'Logout failed'], 401);
         }
     }
 }

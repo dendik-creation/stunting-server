@@ -16,4 +16,9 @@ class JawabanKriteriaKesehatan extends Model
     {
         return $this->belongsTo(KriteriaKesehatan::class, 'kriteria_kesehatan_id');
     }
+
+    public function komponen_kesehatan()
+    {
+        return $this->belongsTo(KomponenKesehatan::class, 'komponen_kesehatan_id', 'id');
+    }
 }

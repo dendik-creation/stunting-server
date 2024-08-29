@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jawaban_kriteria_kemandirians', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tingkat_kemandirian_id')->constrained();
             $table->foreignId('kriteria_kemandirian_id')->constrained();
             $table->foreignId('keluarga_id')->constrained();
             $table->timestamps();
