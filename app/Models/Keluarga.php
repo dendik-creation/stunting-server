@@ -13,6 +13,7 @@ class Keluarga extends Model
     protected $casts = [
         'is_approved' => 'integer',
         'is_free_stunting' => 'integer',
+        'puskesmas_id' => 'integer',
     ];
 
     public function puskesmas(){
