@@ -11,6 +11,12 @@ class PenyakitAnak extends Model
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
     protected $with = ['penyakit'];
+
+    protected $casts = [
+        'anak_sakit_id' => 'integer',
+        'penyakit_id' => 'integer',
+    ];
+
     public function penyakit(){
         return $this->belongsTo(Penyakit::class, 'penyakit_id', 'id');
     }

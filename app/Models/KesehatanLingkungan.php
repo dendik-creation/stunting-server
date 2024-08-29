@@ -19,6 +19,7 @@ class KesehatanLingkungan extends Model
         'step' => 'integer',
         'nilai_total' => 'integer',
         'is_healthy' => 'integer',
+        'keluarga_id' => 'integer',
     ];
 
 

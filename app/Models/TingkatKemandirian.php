@@ -12,6 +12,7 @@ class TingkatKemandirian extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = [
         'step' => 'integer',
+        'keluarga_id' => 'integer',
     ];
 
     public function jawaban_kriteria_kemandirian(){
