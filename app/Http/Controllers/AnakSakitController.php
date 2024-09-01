@@ -48,7 +48,7 @@ class AnakSakitController extends Controller
     {
         // Penyerta
         foreach ($penyerta as $item) {
-            if ($item['selected'] == true) {
+            if (isset($item['selected']) && $item['selected'] == true) {
                 PenyakitAnak::create([
                     'anak_sakit_id' => $anak_sakit_id,
                     'penyakit_id' => $item['id'],
@@ -57,7 +57,7 @@ class AnakSakitController extends Controller
         }
         // Komplikasi
         foreach ($komplikasi as $item) {
-            if ($item['selected'] == true) {
+            if (isset($item['selected']) && $item['selected'] == true) {
                 PenyakitAnak::create([
                     'anak_sakit_id' => $anak_sakit_id,
                     'penyakit_id' => $item['id'],
@@ -87,5 +87,29 @@ class AnakSakitController extends Controller
             'status' => true,
             'message' => 'Data anak sakit berhasil ditambahkan',
         ], 200);
+    }
+
+    private function updatePenyakitAnak(array $penyerta, array $komplikasi, int $anak_sakit_id){
+        if(count($penyerta) > 0 && count($komplikasi) > 0){
+            $penyakitAnak = PenyakitAnak::where('anak_sakit_id', $anak_sakit_id);
+            if($penyakitAnak){
+                // Remove All
+                $penyakitAnak->delete();
+            }
+            // Create New value penyakit
+            $this->storePenyakitAnak($penyerta, $komplikasi, $anak_sakit_id);
+        }
+    }
+
+    public function updateAnakSakit($keluarga_id, Request $request){
+        $anak_sakit = AnakSakit::where('keluarga_id', $keluarga_id)->first();
+        if($anak_sakit){
+            $anak_sakit->update($request->all());
+            $this->updatePenyakitAnak($request->penyakit_penyerta, $request->penyakit_komplikasi, $anak_sakit['id']);
+            return response()->json([
+                'status' => true,
+                'message' => 'Data anak sakit berhasil diperbarui',
+            ], 200);
+        }
     }
 }

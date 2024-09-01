@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->prefix('operator')->group(function(){
         // Keluarga Test Result
         Route::get('/{keluarga_id}/test', [OperatorController::class, 'getKeluargaTest']);
         Route::get('/{keluarga_id}/test/{step}', [OperatorController::class, 'getKeluargaTestByStep']);
+        // Update Data Keluarga & Anak Sakit
+        Route::put('/update/{keluarga_id}', [KeluargaController::class, 'updateKeluarga']);
+        Route::put('/anak-sakit/update/{keluarga_id}', [AnakSakitController::class, 'updateAnakSakit']);
     });
 });
 
@@ -57,6 +60,7 @@ Route::prefix('keluarga')->group(function () {
 
     // Home
     Route::get('/home/{keluarga_id}', [KeluargaController::class, 'homeData']);
+    Route::put('/force-open-test/{keluarga_id}', [KeluargaController::class, 'forceOpenTest']);
 
     // Tes Result
     Route::prefix('test')->middleware('isApproved')->group(function(){
