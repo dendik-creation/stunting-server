@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\AnakSakit;
+use App\Models\Keluarga;
 use App\Models\KesehatanLingkungan;
 use App\Models\TingkatKemandirian;
 use Carbon\Carbon;
@@ -82,14 +83,44 @@ class ScreeningTestHelper
         return $result;
     }
 
+    public static function compareTingkatKemandirian($data){
+        if($data->tingkat_kemandirian[1]->tingkatan > $data->tingkat_kemandirian[0]->tingkatan){
+            $keluarga = Keluarga::findOrFail($data['id']);
+            if($keluarga['is_free_stunting'] == 0){
+                $keluarga->update(['is_free_stunting' => 1]);
+            }
+            return [
+                'status' => true,
+                'message' => 'Selamat Anda berhasil menyelesaikan tes yang telah dilaksanakan.'
+            ];
+        }else if($data->tingkat_kemandirian[1]->tingkatan == $data->tingkat_kemandirian[0]->tingkatan){
+            return [
+                'status' => false,
+                'message' => 'Sayang sekali hasil tes Anda tidak mengalami peningkatan sekali.'
+            ];
+        }else{
+            return [
+                'status' => false,
+                'message' => 'Anda dinyatakan tidak berhasil dalam mengikuti serangkaian tes yang telah dilaksanakan.'
+            ];
+        }
+    }
+
     public static function completeCheck($data){
         $response = [
             'status' => false,
         ];
+        $current_screening = self::getCurrentScreening($data);
         $all_completed = !array_search(false, self::currentTestStatus($data));
-        if($all_completed){
+        if($all_completed || count($data->tingkat_kemandirian) == 2 ){
             $response['status'] = true;
-            $response['next_test'] = Carbon::parse($data?->kesehatan_lingkungan?->last()?->tanggal)->addWeeks(4)->format('Y-m-d');
+            if(count($data->tingkat_kemandirian) == 2){
+                $response['is_done'] = true;
+                $response['is_good'] = ScreeningTestHelper::compareTingkatKemandirian($data)['status'];
+                $response['done_message'] = ScreeningTestHelper::compareTingkatKemandirian($data)['message'];
+            }else{
+                $response['next_test'] = Carbon::parse($data?->kesehatan_lingkungan?->last()?->tanggal)->addWeeks(4)->format('Y-m-d');
+            }
         }
         return $response;
     }

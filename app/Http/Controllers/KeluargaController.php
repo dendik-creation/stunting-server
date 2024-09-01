@@ -9,6 +9,7 @@ use App\Models\Keluarga;
 use App\Models\KesehatanLingkungan;
 use App\Models\TingkatKemandirian;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class KeluargaController extends Controller
 {
@@ -120,5 +121,36 @@ class KeluargaController extends Controller
                 'screening_test' => $screening_test,
             ],
         ]);
+    }
+
+    public function updateKeluarga($keluarga_id, Request $request){
+        $keluarga = Keluarga::findOrFail($keluarga_id);
+        $keluarga->update($request->all());
+        return response()->json([
+            'status' => true,
+            'message' => 'Data keluarga diperbarui',
+        ], 200);
+    }
+
+    public function forceOpenTest($keluarga_id){
+        $tingkat_kemandirian  = TingkatKemandirian::where('keluarga_id', $keluarga_id)->where('step', 1)->first();
+        $kesehatan_lingkungan  = KesehatanLingkungan::where('keluarga_id', $keluarga_id)->where('step', 1)->first();
+        if($tingkat_kemandirian != null){
+            $date_data = Carbon::parse($tingkat_kemandirian->tanggal);
+            $tingkat_kemandirian->update([
+                'tanggal' => $date_data->subWeeks(4),
+            ]);
+        }
+        if($kesehatan_lingkungan != null){
+            $date_data = Carbon::parse($kesehatan_lingkungan->tanggal);
+            $kesehatan_lingkungan->update([
+                'tanggal' => $date_data->subWeeks(4),
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Tes kedua berhasil dibuka sekarang (untuk demo)',
+        ], 200);
     }
 }
