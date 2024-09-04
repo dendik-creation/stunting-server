@@ -16,7 +16,28 @@ class AnakSakit extends Model
         'keluarga_id' => 'integer',
     ];
 
-    public function penyakit_anak(){
+
+    public function penyakit_anak()
+    {
         return $this->hasMany(PenyakitAnak::class, 'anak_sakit_id', 'id');
+    }
+
+    public function penyakit_anak_penyerta()
+    {
+        return $this->hasMany(PenyakitAnak::class)->whereHas('penyakit', function ($query) {
+            $query->where('jenis_penyakit', 'penyerta');
+        });
+    }
+
+    public function penyakit_anak_komplikasi()
+    {
+        return $this->hasMany(PenyakitAnak::class)->whereHas('penyakit', function ($query) {
+            $query->where('jenis_penyakit', 'komplikasi');
+        });
+    }
+
+    public function keluarga()
+    {
+        return $this->belongsTo(Keluarga::class, 'keluarga_id');
     }
 }
