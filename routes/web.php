@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::prefix('keluarga')->middleware('auth')->group(function(){
+    Route::get('/export/bulk', [App\Http\Controllers\WebExportController::class, 'exportKeluargaBulk'])->name('keluarga.export.bulk');
+    Route::get('/export/single/{keluarga_id}', [App\Http\Controllers\WebExportController::class, 'exportKeluargaById'])->name('keluarga.export.single');
+});
