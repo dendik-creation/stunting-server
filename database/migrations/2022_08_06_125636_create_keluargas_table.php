@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->boolean('is_approved')->default(false);
             $table->boolean('is_free_stunting')->default(false);
+            $table->boolean('is_test_done')->default(false);
             $table->foreignId('puskesmas_id')->constrained();
             $table->timestamps();
         });

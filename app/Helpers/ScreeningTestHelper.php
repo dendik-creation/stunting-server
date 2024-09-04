@@ -84,16 +84,17 @@ class ScreeningTestHelper
     }
 
     public static function compareTingkatKemandirian($data){
-        if($data->tingkat_kemandirian[1]->tingkatan > $data->tingkat_kemandirian[0]->tingkatan){
-            $keluarga = Keluarga::findOrFail($data['id']);
-            if($keluarga['is_free_stunting'] == 0){
-                $keluarga->update(['is_free_stunting' => 1]);
-            }
+        $keluarga = Keluarga::findOrFail($data['id']);
+        $keluarga->update([
+            'is_test_done' => 1,
+        ]);
+        if(intval($data->tingkat_kemandirian[1]->tingkatan) > intval($data->tingkat_kemandirian[0]->tingkatan) || intval($data->tingkat_kemandirian[1]->tingkatan) == 4){
+            $keluarga->update(['is_free_stunting' => 1]);
             return [
                 'status' => true,
                 'message' => 'Selamat Anda berhasil menyelesaikan tes yang telah dilaksanakan.'
             ];
-        }else if($data->tingkat_kemandirian[1]->tingkatan == $data->tingkat_kemandirian[0]->tingkatan){
+        }else if(intval($data->tingkat_kemandirian[1]->tingkatan) == intval($data->tingkat_kemandirian[0]->tingkatan)){
             return [
                 'status' => false,
                 'message' => 'Sayang sekali hasil tes Anda tidak mengalami peningkatan sekali.'

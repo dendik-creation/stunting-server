@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ScreeningTestHelper;
 use App\Models\JawabanKriteriaKemandirian;
+use App\Models\Keluarga;
 use App\Models\KriteriaKemandirian;
 use App\Models\TingkatKemandirian;
 use Illuminate\Http\Request;
@@ -40,6 +41,12 @@ class KemandirianController extends Controller
                 'tanggal' => date('Y-m-d'),
                 'keluarga_id' => $keluarga_id,
             ]);
+
+            if($step_tingkatan + 1 == 2){
+                Keluarga::findOrFail($keluarga_id)->update([
+                    'is_test_done' => 1,
+                ]);
+            }
 
             // Store Answer Question
             if (!empty($request->data) && count($request->data) > 0) {
