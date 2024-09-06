@@ -10,27 +10,40 @@ class KeluargaChart extends ChartWidget
     protected static ?string $heading = 'Data keluarga';
     protected static ?string $description = 'Jumlah keluarga yang terdaftar';
     public ?string $filter = '1';
-    protected static ?string $maxHeight = "300px";
+    protected static ?string $maxHeight = '300px';
 
-     protected function getData(): array
+    public ?bool $isFirst = true;
+
+    private function initTriwulanByMonth(): string
     {
-        $filter = $this->filter;
+        $currentMonth = now()->format('n');
+
+        return match (true) {
+            $currentMonth >= 1 && $currentMonth <= 3 => '1',
+            $currentMonth >= 4 && $currentMonth <= 6 => '2',
+            $currentMonth >= 7 && $currentMonth <= 9 => '3',
+            default => '4',
+        };
+    }
+
+    protected function getData(): array
+    {
+        $filter = $this->isFirst ? $this->initTriwulanByMonth() : $this->filter;
+        $this->applyFilter($filter);
+        $this->isFirst = false;
         $startMonth = $filter === '1' ? 1 : ($filter === '2' ? 4 : ($filter === '3' ? 7 : 10));
         $endMonth = $startMonth + 2;
-        if(auth()->user()->role == "operator"){
-            $familyData = Keluarga::where('puskesmas_id', auth()->user()->puskesmas_id)->whereBetween('created_at', [
-                \Carbon\Carbon::now()->startOfYear()->month($startMonth),
-                \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth(),
-            ])->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-              ->groupBy('month')
-              ->get();
-            }else{
-            $familyData = Keluarga::whereBetween('created_at', [
-                \Carbon\Carbon::now()->startOfYear()->month($startMonth),
-                \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth(),
-            ])->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-              ->groupBy('month')
-              ->get();
+        if (auth()->user()->role == 'operator') {
+            $familyData = Keluarga::where('puskesmas_id', auth()->user()->puskesmas_id)
+                ->whereBetween('created_at', [\Carbon\Carbon::now()->startOfYear()->month($startMonth), \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth()])
+                ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->groupBy('month')
+                ->get();
+        } else {
+            $familyData = Keluarga::whereBetween('created_at', [\Carbon\Carbon::now()->startOfYear()->month($startMonth), \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth()])
+                ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->groupBy('month')
+                ->get();
         }
 
         $labels = [];
@@ -44,7 +57,7 @@ class KeluargaChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => "Total keluarga",
+                    'label' => 'Total keluarga',
                     'data' => $data,
                     'borderColor' => 'rgba(54, 162, 235, 1)',
                     'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
@@ -64,7 +77,7 @@ class KeluargaChart extends ChartWidget
                     'beginAtZero' => true,
                     'ticks' => [
                         'stepSize' => 5,
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -73,15 +86,13 @@ class KeluargaChart extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            '1' => 'Triwulan 1 (Jan - Mar '. date('Y') .')',
-            '2' => 'Triwulan 2 (Apr - Jun '. date('Y') .')',
-            '3' => 'Triwulan 3 (Jul - Sep '. date('Y') .')',
-            '4' => 'Triwulan 4 (Oct - Dec '. date('Y') .')',
+            '1' => 'Triwulan 1 (Jan - Mar ' . date('Y') . ')',
+            '2' => 'Triwulan 2 (Apr - Jun ' . date('Y') . ')',
+            '3' => 'Triwulan 3 (Jul - Sep ' . date('Y') . ')',
+            '4' => 'Triwulan 4 (Oct - Dec ' . date('Y') . ')',
         ];
-
     }
 
-    // Mengubah filter saat pengguna memilih
     public function applyFilter(string $filter): void
     {
         $this->filter = $filter;

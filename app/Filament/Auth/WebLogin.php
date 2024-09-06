@@ -5,6 +5,7 @@ namespace App\Filament\Auth;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Auth\Login;
+use Illuminate\Validation\ValidationException;
 
 class WebLogin extends Login
 {
@@ -46,5 +47,13 @@ class WebLogin extends Login
             'username' => $data['username'],
             'password' => $data['password'],
         ];
+    }
+
+
+    protected function throwFailureValidationException(): never
+    {
+        throw ValidationException::withMessages([
+            'data.username' => __('filament-panels::pages/auth/login.messages.failed'),
+        ]);
     }
 }

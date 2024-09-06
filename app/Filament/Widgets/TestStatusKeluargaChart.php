@@ -12,8 +12,25 @@ class TestStatusKeluargaChart extends ChartWidget
     public ?string $filter = '1';
     protected static ?string $maxHeight = "300px";
 
+    public ?bool $isFirst = true;
+
+    private function initTriwulanByMonth(): string
+    {
+        $currentMonth = now()->format('n');
+
+        return match (true) {
+            $currentMonth >= 1 && $currentMonth <= 3 => '1',
+            $currentMonth >= 4 && $currentMonth <= 6 => '2',
+            $currentMonth >= 7 && $currentMonth <= 9 => '3',
+            default => '4',
+        };
+    }
+
     protected function getData(): array
     {
+        $filter = $this->isFirst ? $this->initTriwulanByMonth() : $this->filter;
+        $this->applyFilter($filter);
+        $this->isFirst = false;
         $startMonth = $this->filter === '1' ? 1 : ($this->filter === '2' ? 4 : ($this->filter === '3' ? 7 : 10));
         $endMonth = $startMonth + 2;
         if(auth()->user()->role == "operator"){
