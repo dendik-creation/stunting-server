@@ -8,26 +8,26 @@ class UserPolicy
 {
     public function viewAny(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role == 'operator';
     }
 
     public function view(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role == 'operator';
     }
 
     public function create(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role == 'operator';
     }
 
     public function update(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role == 'operator';
     }
 
     public function delete(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role == 'operator';
     }
 }

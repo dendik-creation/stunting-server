@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -25,7 +26,6 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('username')->label('Username')->required(),
                 Forms\Components\TextInput::make('nama_lengkap')->label('Nama lengkap')->required(),
-                Forms\Components\TextInput::make('password')->label('Password')->password(),
                 Forms\Components\Select::make('role')
                 ->label('Role')
                 ->options([
@@ -33,18 +33,52 @@ class UserResource extends Resource
                     'operator' => 'Operator',
                     'dinas' => 'Dinas',
                 ])
+                ->default(function(string $context){
+                    if(auth()->user()->role == 'operator' && $context === "create"){
+                        return 'operator';
+                    }
+                })
+                ->disabled(fn (string $context) => auth()->user()->role == "operator")
+                ->dehydrateStateUsing(fn ($state) => 'operator' )
+                ->dehydrated(fn ($state) => filled('operator'))
                 ->required(),
+                Forms\Components\TextInput::make('password')
+                ->label(fn (string $context): string => $context === 'create' ? 'Password' : 'Password (abaikan jika tidak ingin merubah)')
+                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                ->dehydrated(fn ($state) => filled($state))
+                ->password()
+                ->revealable()
+                ->required(fn (string $context): bool => $context === 'create'),
+
+                Forms\Components\Select::make('puskesmas_id')
+                ->relationship('puskesmas', 'nama_puskesmas')
+                ->label('Puskesmas')
+                ->required(auth()->user()->role === 'operator')
+                ->disabled(fn (string $context) => auth()->user()->role == "operator")
+                ->default(function(string $context){
+                    if(auth()->user()->role == 'operator' && $context === "create"){
+                        return auth()->user()->puskesmas_id;
+                    }
+                })
+                ->dehydrateStateUsing(fn ($state) => auth()->user()->puskesmas_id )
+                ->dehydrated(fn ($state) => filled(auth()->user()->puskesmas_id))
+                ->searchable()
+                ->preload()
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->query(auth()->user()->role == 'operator' ? User::where('puskesmas_id', auth()->user()->puskesmas_id) : User::query())
             ->columns([
                 Tables\Columns\TextColumn::make('username')->searchable(),
                 Tables\Columns\TextColumn::make('nama_lengkap')->searchable(),
                 Tables\Columns\TextColumn::make('role')->searchable()->formatStateUsing(function($state){
                     return ucfirst($state);
+                }),
+                Tables\Columns\TextColumn::make('puskesmas.nama_puskesmas')->label('Puskesmas')->formatStateUsing(function($state, $record){
+                    return $record->role == 'operator' ? $state : "-";
                 }),
             ])
             ->filters([
@@ -58,7 +92,7 @@ class UserResource extends Resource
                 ->icon('heroicon-o-key')
                 ->action(function (User $record) {
                     $record->update([
-                        'password' => "12345",
+                        'password' => Hash::make('12345'),
                     ]);
                 })
             ])
