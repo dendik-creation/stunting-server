@@ -10,6 +10,7 @@ use App\Models\Penyakit;
 use App\Models\Puskesmas;
 use App\Models\User;
 use App\Policies\AnakSakitPolicy;
+use App\Policies\KabupatenPolicy;
 use App\Policies\KeluargaPolicy;
 use App\Policies\PenyakitPolicy;
 use App\Policies\PuskesmasPolicy;
@@ -29,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Penyakit::class => PenyakitPolicy::class,
         AnakSakit::class => AnakSakitPolicy::class,
         Puskesmas::class => PuskesmasPolicy::class,
+        KabupatenPolicy::class => KabupatenPolicy::class,
     ];
 
     /**

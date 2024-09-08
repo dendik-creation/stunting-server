@@ -16,6 +16,20 @@ class WebExportController extends Controller
         $query = Keluarga::query();
         $clean_filters = null;
 
+        $query->with('puskesmas');
+
+        // From Operator
+        if(auth()->user()->role == 'operator'){
+            $clean_filters['puskesmas'] = auth()->user()->puskesmas->nama_puskesmas;
+        }
+        // From Dinas
+        if(auth()->user()->role == 'dinas'){
+            $query->whereHas('puskesmas', function($puskesmasQuery){
+                $puskesmasQuery->where('kabupaten_id', auth()->user()->kabupaten_id);
+            });
+            $clean_filters['kabupaten'] = auth()->user()->kabupaten->nama_kabupaten;
+        }
+
         if (isset($raw_filters['is_free_stunting'])) {
             $query->where('is_free_stunting', $raw_filters['is_free_stunting']['value']);
             $clean_filters['is_free_stunting'] = filter_var($raw_filters['is_free_stunting']['value'], FILTER_VALIDATE_BOOLEAN);
@@ -38,11 +52,7 @@ class WebExportController extends Controller
             $query->whereBetween('created_at', [$startDate, $endDate]);
             $clean_filters['date_range'] = ['start' => $startDate->format('d F Y'), 'end' => $endDate->format('d F Y')];
         }
-        // From Operator
-        if(auth()->user()->role == 'operator'){
-            $clean_filters['puskesmas'] = auth()->user()->puskesmas->nama_puskesmas;
-        }
-        $keluarga = $query->with('puskesmas')->latest()->get();
+        $keluarga = $query->latest()->get();
         $test_status = $this->countKeluargaTestStatus($keluarga);
         return view('export.keluarga.filter', [
             'title' => 'Cetak Data Keluarga',

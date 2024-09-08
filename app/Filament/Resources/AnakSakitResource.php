@@ -89,13 +89,26 @@ class AnakSakitResource extends Resource
         ]);
     }
 
+    public static function getAnakSakitByRole(string $role) : Builder {
+        if($role == 'operator') {
+            return AnakSakit::with('keluarga')->whereHas('keluarga', function ($query) {
+                $query->where('puskesmas_id', auth()->user()->puskesmas_id);
+            });
+        }else if($role == 'dinas') {
+            return AnakSakit::with('keluarga')->whereHas('keluarga', function ($queryKeluarga) {
+                $queryKeluarga->with('puskesmas')->whereHas('puskesmas', function ($queryPuskesmas) {
+                    $queryPuskesmas->where('kabupaten_id', auth()->user()->kabupaten_id);
+                });
+            });
+        }else{
+            return AnakSakit::query();
+        }
+    }
+
     public static function table(Table $table): Table
     {
         return $table
-            ->query(
-                auth()->user()->role == 'operator' ? AnakSakit::with('keluarga')->whereHas('keluarga', function ($query) {
-                    $query->where('puskesmas_id', auth()->user()->puskesmas_id);
-                }) : AnakSakit::query(),
+            ->query(static::getAnakSakitByRole(auth()->user()->role)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('nama_anak')->searchable(),

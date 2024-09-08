@@ -28,8 +28,13 @@ class KeluargaCountStat extends BaseWidget
                 Stat::make('Jumlah Operator', $operator_count),
             ];
         }else if(auth()->user()->role == 'dinas'){
-            $keluarga_count = $keluarga->count();
-            $success_count = $keluarga->where('is_free_stunting', 1)->count();
+            $keluarga_count = $keluarga
+                ->with('puskesmas')
+                ->whereHas('puskesmas', fn($query) => $query->where('kabupaten_id', auth()->user()->kabupaten_id))
+                ->count();
+            $success_count = $keluarga
+            ->with('puskesmas')
+            ->whereHas('puskesmas', fn($query) => $query->where('kabupaten_id', auth()->user()->kabupaten_id))->where('is_free_stunting', 1)->count();
             return [
                 Stat::make('Jumlah Keluarga', $keluarga_count),
                 Stat::make('Jumlah Tes Berhasil', $success_count),
