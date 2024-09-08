@@ -16,22 +16,22 @@ class UserSeeder extends Seeder
     {
         User::create([
             'username' => 'admin',
-            'nama_lengkap' => 'Admin Indonesia',
+            'nama_lengkap' => 'Admin Stunting',
             'password' => Hash::make('admin1234'),
             'role' => 'admin',
         ]);
 
         User::create([
-            'username' => 'dinas1',
-            'nama_lengkap' => 'Dinas 1',
+            'username' => 'dinas_kudus',
+            'nama_lengkap' => 'Dinas Kudus',
             'password' => Hash::make('12345'),
             'role' => 'dinas',
             'kabupaten_id' => 1,
         ]);
 
         User::create([
-            'username' => 'dinas2',
-            'nama_lengkap' => 'Dinas 2',
+            'username' => 'dinas_demak',
+            'nama_lengkap' => 'Dinas Demak',
             'password' => Hash::make('12345'),
             'role' => 'dinas',
             'kabupaten_id' => 2,
