@@ -17,6 +17,10 @@ Route::get('/', function () {
     return redirect('/dashboard/login');
 });
 
+Route::get('/privacy-policy', function () {
+   return view('privacy-policy');
+});
+
 Route::prefix('keluarga')->middleware('auth')->group(function(){
     Route::get('/export/bulk', [App\Http\Controllers\WebExportController::class, 'exportKeluargaBulk'])->name('keluarga.export.bulk');
     Route::get('/export/single/{keluarga_id}', [App\Http\Controllers\WebExportController::class, 'exportKeluargaById'])->name('keluarga.export.single');
