@@ -39,7 +39,17 @@ class KeluargaChart extends ChartWidget
                 ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
                 ->groupBy('month')
                 ->get();
-        } else {
+        }
+        else if(auth()->user()->role == 'dinas'){
+            $familyData = Keluarga::
+            with('puskesmas')
+            ->whereHas('puskesmas', fn($query) => $query->where('kabupaten_id', auth()->user()->kabupaten_id))
+            ->whereBetween('created_at', [\Carbon\Carbon::now()->startOfYear()->month($startMonth), \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth()])
+                ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->groupBy('month')
+                ->get();
+        }
+        else {
             $familyData = Keluarga::whereBetween('created_at', [\Carbon\Carbon::now()->startOfYear()->month($startMonth), \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth()])
                 ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
                 ->groupBy('month')

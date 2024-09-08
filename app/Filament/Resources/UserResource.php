@@ -23,6 +23,7 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->columns(3)
             ->schema([
                 Forms\Components\TextInput::make('username')->label('Username')->required(),
                 Forms\Components\TextInput::make('nama_lengkap')->label('Nama lengkap')->required(),
@@ -33,14 +34,28 @@ class UserResource extends Resource
                     'operator' => 'Operator',
                     'dinas' => 'Dinas',
                 ])
+                ->reactive()
                 ->default(function(string $context){
                     if(auth()->user()->role == 'operator' && $context === "create"){
                         return 'operator';
                     }
                 })
                 ->disabled(fn (string $context) => auth()->user()->role == "operator")
-                ->dehydrateStateUsing(fn ($state) => 'operator' )
-                ->dehydrated(fn ($state) => filled('operator'))
+                ->dehydrateStateUsing(function(string $context, string $state){
+                    if(auth()->user()->role == 'operator'){
+                        return 'operator';
+                    }else{
+                        return $state;
+                    }
+                })
+                ->dehydrated(function(string $context, string $state){
+                    if(auth()->user()->role == 'operator'){
+                        return 'operator';
+                    }else{
+                        return $state;
+                    }
+
+                })
                 ->required(),
                 Forms\Components\TextInput::make('password')
                 ->label(fn (string $context): string => $context === 'create' ? 'Password' : 'Password (abaikan jika tidak ingin merubah)')
@@ -53,16 +68,28 @@ class UserResource extends Resource
                 Forms\Components\Select::make('puskesmas_id')
                 ->relationship('puskesmas', 'nama_puskesmas')
                 ->label('Puskesmas')
-                ->required(auth()->user()->role === 'operator')
+                ->required()
                 ->disabled(fn (string $context) => auth()->user()->role == "operator")
                 ->default(function(string $context){
                     if(auth()->user()->role == 'operator' && $context === "create"){
                         return auth()->user()->puskesmas_id;
                     }
                 })
-                ->dehydrateStateUsing(fn ($state) => auth()->user()->puskesmas_id )
+                ->dehydrateStateUsing(fn ($state) => auth()->user()->puskesmas_id)
                 ->dehydrated(fn ($state) => filled(auth()->user()->puskesmas_id))
+                ->hidden(function ($get) {
+                    return $get('role') != 'operator' || $get('role') == '';
+                })
                 ->searchable()
+                ->preload(),
+                Forms\Components\Select::make('kabupaten_id')
+                ->relationship('kabupaten', 'nama_kabupaten')
+                ->label('Kabupaten')
+                ->searchable()
+                ->required()
+                ->hidden(function ($get) {
+                    return auth()->user()->role == "operator" || $get('role') != 'dinas' || $get('role') == '';
+                })
                 ->preload()
             ]);
     }
@@ -78,8 +105,11 @@ class UserResource extends Resource
                     return ucfirst($state);
                 }),
                 Tables\Columns\TextColumn::make('puskesmas.nama_puskesmas')->label('Puskesmas')->formatStateUsing(function($state, $record){
-                    return $record->role == 'operator' ? $state : "-";
+                    return $record->role == 'operator' ? $state : "";
                 }),
+                Tables\Columns\TextColumn::make('kabupaten.nama_kabupaten')->label('Kabupaten')->formatStateUsing(function($state, $record){
+                    return $record->role == 'dinas' ? $state : "";
+                })->hidden(auth()->user()->role == 'operator'),
             ])
             ->filters([
                 //
@@ -98,7 +128,7 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
             ]);
     }

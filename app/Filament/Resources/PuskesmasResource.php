@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PuskesmasResource\Pages;
 use App\Filament\Resources\PuskesmasResource\RelationManagers;
+use App\Models\Kabupaten;
 use App\Models\Puskesmas;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -24,7 +25,8 @@ class PuskesmasResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama_puskesmas')->label('Nama Puskesmas')->required(),
-                Forms\Components\Textarea::make('alamat')->required()->label('Alamat Lengkap')
+                Forms\Components\Textarea::make('alamat')->required()->label('Alamat Lengkap'),
+                Forms\Components\Select::make('kabupaten_id')->required()->label('Kabupaten')->relationship('kabupaten', 'nama_kabupaten')->searchable()->preload(),
             ]);
     }
 
@@ -33,10 +35,11 @@ class PuskesmasResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nama_puskesmas')->searchable(),
-                Tables\Columns\TextColumn::make('alamat')->searchable()
+                Tables\Columns\TextColumn::make('alamat')->searchable(),
+                Tables\Columns\TextColumn::make('kabupaten.nama_kabupaten')->searchable()
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('kabupaten_id')->label('Kabupaten')->options(fn() => Kabupaten::all()->pluck('nama_kabupaten', 'id'))->searchable()->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

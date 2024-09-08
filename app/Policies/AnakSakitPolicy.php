@@ -8,12 +8,12 @@ class AnakSakitPolicy
 {
     public function viewAny(User $user)
     {
-        return $user->role === 'admin' || $user->role == 'operator';
+        return $user->role === 'admin' || $user->role == 'operator' || $user->role == 'dinas';
     }
 
     public function view(User $user)
     {
-        return $user->role === 'admin' || $user->role == 'operator';
+        return $user->role === 'admin' || $user->role == 'operator' || $user->role == 'dinas';
     }
 
     public function create(User $user)

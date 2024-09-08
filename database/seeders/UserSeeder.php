@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
             'nama_lengkap' => 'Dinas 1',
             'password' => Hash::make('12345'),
             'role' => 'dinas',
+            'kabupaten_id' => 1,
         ]);
 
         User::create([
@@ -33,6 +34,7 @@ class UserSeeder extends Seeder
             'nama_lengkap' => 'Dinas 2',
             'password' => Hash::make('12345'),
             'role' => 'dinas',
+            'kabupaten_id' => 2,
         ]);
 
         User::create([
