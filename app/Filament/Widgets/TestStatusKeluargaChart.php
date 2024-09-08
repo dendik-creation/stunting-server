@@ -38,7 +38,17 @@ class TestStatusKeluargaChart extends ChartWidget
                 \Carbon\Carbon::now()->startOfYear()->month($startMonth),
                 \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth(),
             ])->get();
-        }else{
+        }
+        else if(auth()->user()->role == 'dinas'){
+            $families = Keluarga::
+            with('puskesmas')
+            ->whereHas('puskesmas', fn($query) => $query->where('kabupaten_id', auth()->user()->kabupaten_id))
+            ->whereBetween('created_at', [
+                \Carbon\Carbon::now()->startOfYear()->month($startMonth),
+                \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth(),
+            ])->get();
+        }
+        else{
             $families = Keluarga::whereBetween('created_at', [
                 \Carbon\Carbon::now()->startOfYear()->month($startMonth),
                 \Carbon\Carbon::now()->startOfYear()->month($endMonth)->endOfMonth(),

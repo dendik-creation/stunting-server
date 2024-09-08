@@ -13,7 +13,7 @@ class PuskesmasSeeder extends Seeder
      */
     public function run(): void
     {
-        $puskesmas = [
+        $kudusPuskesmas = [
             "Kaliwungu",
             "Sidorekso",
             "Wergu Wetan",
@@ -35,10 +35,28 @@ class PuskesmasSeeder extends Seeder
             "Rejosari"
         ];
 
-        foreach ($puskesmas as $key => $value) {
+        $demakPuskesmas = [
+            'Demak I',
+            'Demak II',
+            'Demak III',
+            'Bonang I',
+            'Bonang II',
+            'Karang Tengah',
+        ];
+
+        foreach ($kudusPuskesmas as $key => $value) {
             Puskesmas::create([
                 'nama_puskesmas' => $value,
                 'alamat' => 'Jl. ' . $value . ' No '. rand(10, 99),
+                'kabupaten_id' => 1,
+            ]);
+        }
+
+        foreach ($demakPuskesmas as $key => $value) {
+            Puskesmas::create([
+                'nama_puskesmas' => $value,
+                'alamat' => 'Jl. ' . $value . ' No '. rand(10, 99),
+                'kabupaten_id' => 2,
             ]);
         }
     }

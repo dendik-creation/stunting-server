@@ -8,7 +8,7 @@
 </head>
 <body class="bg-white p-8">
     <div class="">
-        <h1 class="text-2xl font-bold mb-4">Laporan Data Keluarga {{ isset($filters['puskesmas']) ? 'Puskemas ' . $filters['puskesmas'] : ""  }}</h1>
+        <h1 class="text-2xl font-bold mb-4">Laporan Data Keluarga {{ isset($filters['puskesmas']) ? 'Puskemas ' . $filters['puskesmas'] : ""  }}  {{ isset($filters['kabupaten']) ? 'Dinas Kab. ' . $filters['kabupaten'] : ""  }}</h1>
         <div class="mb-2">Tanggal cetak <b>{{ $print_at }}</b></div>
         @if ($filters != null)
         <div class="mb-1">Filter yang diterapkan : </div>

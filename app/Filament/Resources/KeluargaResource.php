@@ -27,10 +27,23 @@ class KeluargaResource extends Resource
         return $form->schema([Forms\Components\TextInput::make('nik')->label('NIK')->required(), Forms\Components\TextInput::make('nama_lengkap')->required(), Forms\Components\TextInput::make('desa')->required(), Forms\Components\TextInput::make('rt')->required(), Forms\Components\TextInput::make('rw')->required(), Forms\Components\Textarea::make('alamat')->required()->label('Alamat Lengkap'), Forms\Components\Select::make('puskesmas_id')->relationship('puskesmas', 'nama_puskesmas')->required()->label('Puskesmas')]);
     }
 
+    public static function getKeluargaByRole(): Builder
+    {
+        return (new static::$model())->newQuery()
+            ->when(auth()->user()->role == 'operator', function ($query) {
+                return $query->where('puskesmas_id', auth()->user()->puskesmas_id);
+            })
+            ->when(auth()->user()->role == 'dinas', function ($query) {
+                return $query->whereHas('puskesmas', function ($query) {
+                    $query->where('kabupaten_id', auth()->user()->kabupaten_id);
+                });
+            });
+    }
+
     public static function table(Table $table): Table
     {
         return $table
-            ->query(auth()->user()->role == 'operator' ? \App\Models\Keluarga::where('puskesmas_id', auth()->user()->puskesmas_id) : \App\Models\Keluarga::query())
+            ->query(static::getKeluargaByRole())
             ->columns([
                 Tables\Columns\TextColumn::make('nik')->label('NIK')->searchable(),
                 Tables\Columns\TextColumn::make('nama_lengkap')->searchable(),
@@ -52,6 +65,10 @@ class KeluargaResource extends Resource
                 Tables\Columns\TextColumn::make('puskesmas.nama_puskesmas')->searchable(),
             ])
             ->filters([
+                SelectFilter::make('puskesmas_id')->label('Puskesmas')->options(function(){
+                    $puskemsas = Puskesmas::query();
+                    return auth()->user()->role == 'dinas' ? $puskemsas->where('kabupaten_id', auth()->user()->kabupaten_id)->get()->pluck('nama_puskesmas', 'id') : $puskemsas->get()->pluck('nama_puskesmas', 'id');
+                })->hidden(auth()->user()->role == 'operator')->searchable(),
                 SelectFilter::make('is_free_stunting')->label('Hasil Akhir')->options([
                     0 => 'Gagal',
                     1 => 'Berhasil',
@@ -60,9 +77,6 @@ class KeluargaResource extends Resource
                     0 => 'Berjalan',
                     1 => 'Selesai',
                 ]),
-                SelectFilter::make('puskesmas_id')->label('Puskesmas')->options(function(){
-                    return Puskesmas::all()->pluck('nama_puskesmas', 'id');
-                })->hidden(auth()->user()->role == 'operator'),
                 DateRangeFilter::make('created_at')
                     ->placeholder('Dari - Sampai')
                     ->label('Tanggal registrasi keluarga'),
@@ -71,6 +85,7 @@ class KeluargaResource extends Resource
                     ->label('Cetak Data')
                     ->color('success')
                     ->icon('heroicon-s-printer')
+                    ->disabled(fn (Table $table) => $table->getRecords()->count() == 0)
                     ->action(function (Table $table) {
                         $filters = $table->getFiltersForm()->getState();
                         return redirect()->route('keluarga.export.bulk', $filters);

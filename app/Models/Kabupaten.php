@@ -5,13 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Puskesmas extends Model
+class Kabupaten extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function kabupaten(){
-        return $this->belongsTo(Kabupaten::class, 'kabupaten_id');
+    public function puskesmas(){
+        return $this->hasMany(Puskesmas::class, 'kabupaten_id', 'id');
+    }
+
+    public function users(){
+        return $this->hasMany(User::class, 'kabupaten_id', 'id');
     }
 }
