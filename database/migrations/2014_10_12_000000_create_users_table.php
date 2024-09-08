@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('nama_lengkap');
             $table->string('password');
             $table->enum('role', ['admin', 'operator', 'dinas']);
-            $table->foreignId('puskesmas_id')->constrained();
+            $table->foreignId('puskesmas_id')->nullable()->constrained();
+            $table->foreignId('kabupaten_id')->nullable()->constrained();
             $table->timestamps();
         });
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_anak');
             $table->string('usia');
+            $table->enum('jenis_kelamin', ['L', 'P']);
             $table->double('berat_badan', 8, 2);
             $table->double('tinggi_badan', 8, 2);
             $table->enum('berat_lahir', ['normal', 'rendah']);

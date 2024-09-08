@@ -15,6 +15,16 @@ class PuskesmasController extends Controller
         //
     }
 
+    public function getList(){
+        $puskesmas = Puskesmas::all();
+        $data = [
+            'status' => true,
+            'message' => 'Data puskesmas ditemukan',
+            'data' => $puskesmas,
+        ];
+        return response()->json($data ,200);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

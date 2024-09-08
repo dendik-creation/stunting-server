@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('tingkat_kemandirians', function (Blueprint $table) {
             $table->id();
             $table->string('tingkatan', 2);
+            $table->integer('step');
             $table->date('tanggal');
+            $table->foreignId('keluarga_id')->constrained();
             $table->timestamps();
         });
     }

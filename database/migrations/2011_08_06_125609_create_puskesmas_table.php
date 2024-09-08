@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_puskesmas');
             $table->text('alamat');
+            $table->foreignId('kabupaten_id')->constrained();
             $table->timestamps();
         });
     }
