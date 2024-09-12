@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'operator', 'dinas']);
             $table->foreignId('puskesmas_id')->nullable()->constrained();
             $table->foreignId('kabupaten_id')->nullable()->constrained();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

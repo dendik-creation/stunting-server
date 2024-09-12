@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/dashboard/login');
+    return redirect('/dashboard');
 });
 
 Route::get('/privacy-policy', function () {
