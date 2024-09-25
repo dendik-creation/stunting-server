@@ -17,6 +17,8 @@ class PenyakitResource extends Resource
 {
     protected static ?string $model = Penyakit::class;
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

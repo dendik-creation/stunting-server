@@ -17,6 +17,8 @@ class KabupatenResource extends Resource
 {
     protected static ?string $model = Kabupaten::class;
 
+    protected static ?int $navigationSort = 5;
+
     protected static ?string $navigationIcon = 'heroicon-s-building-office';
 
     public static function form(Form $form): Form

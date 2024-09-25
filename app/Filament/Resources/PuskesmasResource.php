@@ -18,6 +18,8 @@ class PuskesmasResource extends Resource
 {
     protected static ?string $model = Puskesmas::class;
 
+    protected static ?int $navigationSort = 6;
+
     protected static ?string $navigationIcon = 'heroicon-s-building-office';
 
     public static function form(Form $form): Form
