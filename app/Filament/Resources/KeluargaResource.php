@@ -20,6 +20,8 @@ class KeluargaResource extends Resource
 {
     protected static ?string $model = Keluarga::class;
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form

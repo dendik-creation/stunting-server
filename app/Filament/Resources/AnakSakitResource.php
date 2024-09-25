@@ -21,6 +21,8 @@ class AnakSakitResource extends Resource
 {
     protected static ?string $model = AnakSakit::class;
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $navigationIcon = 'heroicon-o-face-frown';
 
     public static function form(Form $form): Form
